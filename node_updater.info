@@ -1,0 +1,8 @@
+name = Node Updater
+description = Batch node update using 'node_save()'
+core = 7.x
+package = Administration
+configure = admin/content/node-updater
+permission = admin/people/permissions#module-node_updater
+
+files[] = node_updater.module

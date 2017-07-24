@@ -1,0 +1,59 @@
+<?php
+/**
+ * Implements hook_node_operations().
+ */
+function node_updater_node_operations() {
+  $operations = array(
+    'node_updater_node_update' => array(
+      'label' => t('Update selected nodes'),
+      'callback' => 'node_updater_node_mass_update',
+    ),
+  );
+
+  return $operations;
+}
+
+
+/**
+ * callback from node operation
+ */
+function node_updater_node_mass_update($nodes) {
+  $nodes = node_load_multiple($nodes);
+  foreach ($nodes as $node) {
+    node_save($node);
+  }
+
+  drupal_set_message(t(count($nodes).' nodes has been updated.'), 'status');
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function node_updater_menu() {
+  $items['admin/content/node-updater'] = array(
+    'title' => 'Node updater',
+    'page callback' => 'node_updater_page',
+    'access arguments' => array('access node updater'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'includes/node_updater_page.admin.inc'
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_permission().
+ */
+function node_updater_permission() {
+  return array(
+    'access node updater' =>  array(
+      'title' => t('Access node updater process'),
+      'description' => t('Let user to perform node updateing process.'),
+    ),
+  );
+}
+
+
+module_load_include('inc', 'node_updater', 'includes/helper');
